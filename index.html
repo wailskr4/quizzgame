@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة الأسئلة والألغاز</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #ffd1dc 0%, #87ceeb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            max-width: 700px;
+            width: 100%;
+            padding: 20px;
+            animation: slideIn 0.5s ease-out;
+            margin: 10px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #ff69b4;
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            line-height: 1.3;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffd1dc 0%, #ffb6c1 100%);
+            border-radius: 12px;
+            gap: 10px;
+        }
+
+        .score-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        #musicBtn {
+            background: #ff9ac6;
+            border: none;
+            padding: 8px 12px;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: 0.3s;
+            font-size: 0.9em;
+            width: 100%;
+        }
+
+        #musicBtn:hover {
+            background: #ff77b6;
+        }
+
+        .score-label {
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .score-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #ff1493;
+        }
+
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 15px;
+            height: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #87ceeb, #4169e1);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.7em;
+            min-width: 40px;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #fff9e6 0%, #e6f7ff 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #ffb6c1;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .question-number {
+            color: #4169e1;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #87ceeb;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 0.95em;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: right;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: right;
+        }
+
+        .option-btn:hover {
+            background: #e6f7ff;
+            transform: translateX(-3px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+
+        .option-btn.correct {
+            background: #90ee90;
+            border-color: #228b22;
+            animation: pulse 0.5s;
+        }
+
+        .option-btn.wrong {
+            background: #ffb6c6;
+            border-color: #dc143c;
+            animation: shake 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-size: 1em;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            display: block;
+            margin: 15px auto;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .next-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(255,105,180,0.3);
+        }
+
+        .result-screen {
+            text-align: center;
+            animation: slideIn 0.5s ease-out;
+            padding: 15px;
+        }
+
+        .result-emoji {
+            font-size: 3.5em;
+            margin: 15px 0;
+        }
+
+        .result-message {
+            font-size: 1.5em;
+            color: #ff69b4;
+            margin: 15px 0;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        .stars {
+            font-size: 2.2em;
+            margin: 15px 0;
+        }
+
+        .final-score {
+            font-size: 1.2em;
+            color: #4169e1;
+            margin: 15px 0;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #87ceeb, #4169e1);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-size: 1em;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(65,105,225,0.3);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .welcome-screen {
+            text-align: center;
+            animation: slideIn 0.5s ease-out;
+            padding: 15px;
+        }
+
+        .welcome-screen h1 {
+            color: #ff69b4;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            line-height: 1.3;
+        }
+
+        .welcome-screen p {
+            font-size: 0.95em;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #fff9e6 0%, #e6f7ff 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #ffb6c1;
+        }
+
+        #start-btn {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 15px 35px;
+            font-size: 1.1em;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(255,105,180,0.2);
+            animation: bounce 2s infinite;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        #start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255,105,180,0.3);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Media queries pour les très petits écrans */
+        @media (max-width: 450px) {
+            body {
+                padding: 5px;
+                align-items: flex-start;
+                min-height: 100vh;
+                height: auto;
+            }
+
+            .container {
+                padding: 15px;
+                margin: 5px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .score-board {
+                padding: 14px;
+                margin-bottom: 14px;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .score-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .score-label {
+                font-size: 0.90em;
+                margin-bottom: 0;
+            }
+
+            .score-value {
+                font-size: 1.3em;
+            }
+
+            .question-card {
+                padding: 15px;
+                margin-bottom: 12px;
+            }
+
+            .question-text {
+                font-size: 1em;
+                margin-bottom: 15px;
+            }
+
+            .option-btn {
+                padding: 12px;
+                font-size: 0.9em;
+                min-height: 55px;
+            }
+
+            .welcome-screen h1 {
+                font-size: 1.3em;
+            }
+
+            .welcome-screen p {
+                font-size: 0.9em;
+                padding: 15px;
+                margin-bottom: 25px;
+            }
+
+            #start-btn {
+                font-size: 1em;
+                padding: 12px 25px;
+            }
+
+            .result-emoji {
+                font-size: 3em;
+            }
+
+            .result-message {
+                font-size: 1.3em;
+            }
+
+            .stars {
+                font-size: 2em;
+            }
+
+            .final-score {
+                font-size: 1.1em;
+            }
+
+            /* Amélioration de la lisibilité sur petits écrans */
+            .question-text, .option-btn {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+
+            /* Ajustements pour le texte long */
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.3em;
+            }
+
+            .question-text {
+                font-size: 0.95em;
+            }
+
+            .option-btn {
+                font-size: 0.85em;
+                padding: 10px;
+            }
+
+            .welcome-screen h1 {
+                font-size: 1.2em;
+            }
+
+            .welcome-screen p {
+                font-size: 0.85em;
+            }
+        }
+
+        /* Pour les appareils en mode paysage avec petite hauteur */
+        @media (max-height: 600px) and (max-width: 450px) {
+            body {
+                align-items: flex-start;
+                padding: 5px;
+            }
+
+            .container {
+                margin: 5px 0;
+            }
+
+            .question-card {
+                padding: 12px;
+            }
+
+            .options {
+                gap: 8px;
+            }
+
+            .option-btn {
+                padding: 10px;
+                min-height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-screen" id="welcomeScreen">
+            <h1>🎮 لعبة تاع الأسئلة والألغاز المنوعة 🎮</h1>
+            <p>مرحباً بك هيبوشا في لعبة الأسئلة والألغاز ^_^ راح تلقاي هنا 20 سؤالاً متنوعاً بين الثقافة العامة، المطبخ العربي والوجبات السريعة، علم النفس، وأسئلة متنوع. بعض الأسئلة باللغة الإنجليزية لتنويع التحدي!</p>
+            <button id="start-btn">🚀 هيا نبداو اللعبة</button>
+        </div>
+
+        <div id="gameScreen" class="hidden">
+            <div class="header">
+                <h1>🎮 لعبة الأسئلة والألغاز 🎮</h1>
+            </div>
+            
+            <audio id="bg-music" autoplay loop>
+                <!-- tu mettras ton fichier ici -->
+                <source src="music.mp3" type="audio/mp3">
+            </audio>
+
+            <button id="musicBtn">🔊 تشغيل الموسيقى</button>
+            
+            <div class="score-board">
+                <div class="score-item">
+                    <div class="score-label">النقاط</div>
+                    <div class="score-value" id="score">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">السؤال</div>
+                    <div class="score-value" id="questionCounter">1/10</div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
+
+            <div class="question-card" id="questionCard">
+                <div class="question-number" id="questionNumber"></div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="options"></div>
+            </div>
+
+            <button class="next-btn hidden" id="nextBtn">السؤال التالي ⬅️</button>
+        </div>
+
+        <div id="resultScreen" class="result-screen hidden">
+            <div class="result-emoji" id="resultEmoji"></div>
+            <div class="result-message" id="resultMessage"></div>
+            <div class="stars" id="stars"></div>
+            <div class="final-score" id="finalScore"></div>
+            <button class="restart-btn" onclick="restartGame()">🔄 العب مرة أخرى</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // Questions sur les nations (5 questions)
+            {
+                question: "ما هي أكبر دولة في العالم من حيث المساحة؟",
+                options: ["كندا", "الصين", "روسيا", "الولايات المتحدة"],
+                correct: 2
+            },
+            {
+                question: "كم عدد الدول العربية؟",
+                options: ["18", "20", "22", "25"],
+                correct: 2
+            },
+            {
+                question: "What is the capital of Egypt?",
+                options: ["Alexandria", "Cairo", "Luxor", "Aswan"],
+                correct: 1
+            },
+            {
+                question: "أنا بلد في قلب أوروبا، أشتهر بالساعات والشوكولاتة، من أنا؟",
+                options: ["النمسا", "بلجيكا", "سويسرا", "هولندا"],
+                correct: 2
+            },
+            {
+                question: "ما هي أصغر دولة في العالم؟",
+                options: ["موناكو", "الفاتيكان", "سان مارينو", "ليختنشتاين"],
+                correct: 1
+            },
+
+            // Questions culinaires arabes et fast food (5 questions)
+            {
+                question: "ما هو المكون الأساسي في الحمص؟",
+                options: ["الفول", "الحمص", "العدس", "الفاصوليا"],
+                correct: 1
+            },
+            {
+                question: "Which fast food chain has the slogan 'I'm lovin' it'?",
+                options: ["Burger King", "McDonald's", "KFC", "Subway"],
+                correct: 1
+            },
+            {
+                question: "أنا حلوى عربية، مصنوعة من الجبن والعجين المقرمش وأغرق في القطر، من أنا؟",
+                options: ["البقلاوة", "الكنافة", "القطايف", "البسبوسة"],
+                correct: 1
+            },
+            {
+                question: "ما هو الاسم العربي للطبق الذي يتكون من أرز ولحم وزبيب؟",
+                options: ["الكبسة", "المندي", "المقلوبة", "البرياني"],
+                correct: 0
+            },
+            {
+                question: "من أين جاءت البيتزا الأصلية؟",
+                options: ["فرنسا", "إسبانيا", "إيطاليا", "اليونان"],
+                correct: 2
+            },
+
+            // Questions psychologiques (5 questions)
+            {
+                question: "ما هو الهرمون المسؤول عن الشعور بالسعادة؟",
+                options: ["الأدرينالين", "السيروتونين", "الكورتيزول", "الميلاتونين"],
+                correct: 1
+            },
+            {
+                question: "What do we call the fear of being in crowded places?",
+                options: ["Claustrophobia", "Agoraphobia", "Acrophobia", "Nyctophobia"],
+                correct: 1
+            },
+            {
+                question: "كم عدد الحواس الخمس الأساسية عند الإنسان؟",
+                options: ["4", "5", "6", "7"],
+                correct: 1
+            },
+            {
+                question: "أنا موجود في كل مكان لكن لا يمكنك رؤيتي، أؤثر على مشاعرك وأفكارك، من أنا؟",
+                options: ["العقل", "الروح", "التفكير", "الذاكرة"],
+                correct: 2
+            },
+            {
+                question: "ما هو متوسط عدد ساعات النوم الموصى بها للبالغين؟",
+                options: ["5-6 ساعات", "7-9 ساعات", "10-12 ساعة", "4-5 ساعات"],
+                correct: 1
+            },
+
+            // Questions fun et devinettes (5 questions)
+            {
+                question: "له رأس ولا يفكر، وله عيون ولا يرى، ما هو؟",
+                options: ["الدبوس", "الإبرة", "المسمار", "الزر"],
+                correct: 0
+            },
+            {
+                question: "What has hands but cannot clap?",
+                options: ["A statue", "A clock", "A tree", "A robot"],
+                correct: 1
+            },
+            {
+                question: "كلما أخذت منه كبر، ما هو؟",
+                options: ["البحر", "الحفرة", "الجبل", "النهر"],
+                correct: 1
+            },
+            {
+                question: "ما الشيء الذي يمشي بلا قدمين ويبكي بلا عينين؟",
+                options: ["السحاب", "الشجرة", "الجبل", "الحجر"],
+                correct: 0
+            },
+            {
+                question: "أنا أول من يدخل البيت وآخر من يخرج منه، من أنا؟",
+                options: ["الباب", "المفتاح", "الجدار", "النافذة"],
+                correct: 0
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        // Start game button
+        document.getElementById('start-btn').addEventListener('click', function() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            loadQuestion();
+        });
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            document.getElementById('questionNumber').textContent = `السؤال ${currentQuestion + 1} من ${questions.length}`;
+            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('questionCounter').textContent = `${currentQuestion + 1}/${questions.length}`;
+            document.getElementById('score').textContent = score;
+            
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressBar').textContent = Math.round(progress) + '%';
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+            
+            document.getElementById('nextBtn').classList.add('hidden');
+        }
+
+        function selectAnswer(selected) {
+            if (answered) return;
+            answered = true;
+            
+            const buttons = document.querySelectorAll('.option-btn');
+            const correct = questions[currentQuestion].correct;
+            
+            if (selected === correct) {
+                buttons[selected].classList.add('correct');
+                score += 10;
+                document.getElementById('score').textContent = score;
+            } else {
+                buttons[selected].classList.add('wrong');
+                buttons[correct].classList.add('correct');
+            }
+            
+            buttons.forEach(btn => btn.style.pointerEvents = 'none');
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+            
+            const percentage = (score / (questions.length * 10)) * 100;
+            let emoji, message, stars;
+            
+            if (percentage >= 90) {
+                emoji = '🏆';
+                message = 'ممتاز جداً هيبوشا!';
+                stars = '⭐⭐⭐⭐⭐';
+            } else if (percentage >= 70) {
+                emoji = '🎉';
+                message = 'رائع و الله مليح!';
+                stars = '⭐⭐⭐⭐';
+            } else if (percentage >= 50) {
+                emoji = '😊';
+                message = 'جيد راكي مليحة!';
+                stars = '⭐⭐⭐';
+            } else if (percentage >= 30) {
+                emoji = '😐';
+                message = 'حاولي مرة أخرى';
+                stars = '⭐⭐';
+            } else {
+                emoji = '😅';
+                message = 'تحتاج للمزيد من التدريب';
+                stars = '⭐';
+            }
+            
+            document.getElementById('resultEmoji').textContent = emoji;
+            document.getElementById('resultMessage').textContent = message;
+            document.getElementById('stars').textContent = stars;
+            document.getElementById('finalScore').textContent = `النتيجة النهائية: ${score} من ${questions.length * 10}`;
+        }
+
+        function restartGame() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+        }
+
+        document.getElementById('nextBtn').onclick = nextQuestion;
+
+        // Gestion de la musique
+        const musicBtn = document.getElementById('musicBtn');
+        const bgMusic = document.getElementById('bg-music');
+        let musicPlaying = false;
+
+        musicBtn.addEventListener('click', function() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicBtn.textContent = '🔊 تشغيل الموسيقى';
+                musicPlaying = false;
+            } else {
+                bgMusic.play().catch(e => {
+                    console.log('تشغيل الموسيقى يتطلب تفاعل المستخدم أولاً');
+                });
+                musicBtn.textContent = '🔇 إيقاف الموسيقى';
+                musicPlaying = true;
+            }
+        });
+    </script>
+</body>
+</html>
